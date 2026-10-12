@@ -1,6 +1,34 @@
-import '../css/SignUpPage.css'
+import { useState, type FormEvent } from 'react'
+import { useAuth } from '../../context/AuthContext/useAuth'
+import '../../css/SignUpPage/SignUpPage.css'
 
 function SignUpPage() {
+  const { signUp } = useAuth()
+  const [error, setError] = useState('')
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const formData = new FormData(event.currentTarget)
+    const name = String(formData.get('name') ?? '')
+    const email = String(formData.get('email') ?? '')
+    const password = String(formData.get('password') ?? '')
+    const confirmPassword = String(formData.get('confirmPassword') ?? '')
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.')
+      return
+    }
+
+    try {
+      signUp(name, email, password)
+      window.location.assign('/')
+    } catch (authError) {
+      setError(
+        authError instanceof Error ? authError.message : 'Unable to create your account.',
+      )
+    }
+  }
+
   return (
     <main className="auth-page">
       <section className="auth-card" aria-labelledby="signup-title">
@@ -13,7 +41,7 @@ function SignUpPage() {
           <p>Join Shoply and make your next purchase your easiest one.</p>
         </div>
 
-        <form className="auth-form">
+        <form className="auth-form" onSubmit={handleSubmit}>
           <label htmlFor="signup-name">Full name</label>
           <input
             id="signup-name"
@@ -60,6 +88,12 @@ function SignUpPage() {
             <input name="terms" type="checkbox" required />
             I agree to the <a href="#terms">terms and conditions</a>
           </label>
+
+          {error && (
+            <p className="auth-error" role="alert">
+              {error}
+            </p>
+          )}
 
           <button type="submit">Create account</button>
         </form>

@@ -1,5 +1,5 @@
-import LoginPage from './pages/LoginPage'
-import SignUpPage from './pages/SignUpPage'
+import LoginPage from './pages/LoginPage/LoginPage'
+import SignUpPage from './pages/SignUpPage/SignUpPage'
 
 function App() {
   const isSignUpPage = window.location.pathname === '/signup'
