@@ -128,10 +128,13 @@ body {
 }
 
 .product-card {
+  display: block;
   overflow: hidden;
+  color: inherit;
   background: #fff;
   border: 1px solid var(--home-border);
   border-radius: 12px;
+  text-decoration: none;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
@@ -191,7 +194,8 @@ body {
 }
 
 .home-brand:focus-visible,
-.home-header nav a:focus-visible {
+.home-header nav a:focus-visible,
+.product-card:focus-visible {
   outline: 3px solid rgba(184, 92, 56, 0.25);
   outline-offset: 4px;
 }

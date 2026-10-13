@@ -90,7 +90,7 @@ function HomePage() {
         {!isLoading && !error && (
           <div className="product-grid">
             {products.map((product) => (
-              <article className="product-card" key={product.id}>
+              <a className="product-card" href={`/product/${product.id}`} key={product.id}>
                 <div className="product-image-wrapper">
                   <img
                     src={product.imgURL}
@@ -103,7 +103,7 @@ function HomePage() {
                   <h3>{product.name}</h3>
                   <p className="product-price">${product.price.toFixed(2)}</p>
                 </div>
-              </article>
+              </a>
             ))}
           </div>
         )}
