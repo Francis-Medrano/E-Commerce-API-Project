@@ -1,0 +1,82 @@
+[
+  {
+    "id":1,
+    "imgURL": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=500",
+    "price": 60.00,
+    "name": "Banana",
+    "description": "Sweet and soft bananas, perfect for snacks, smoothies, and desserts.",
+    "rating": 4.8
+  },
+  {
+    "id":2,
+    "imgURL": "https://images.unsplash.com/photo-1560806887-1e4cd0b6cbd6?w=500",
+    "price": 120.00,
+    "name": "Apple",
+    "description": "Crisp and juicy apples with a refreshing sweet-tart flavor.",
+    "rating": 4.7
+  },
+  {
+    "id":3,
+    "imgURL": "https://images.unsplash.com/photo-1611080626919-7cf5a9dbab5b?w=500",
+    "price": 100.00,
+    "name": "Orange",
+    "description": "Juicy citrus fruit rich in vitamin C, ideal for fresh juice and snacking.",
+    "rating": 4.6
+  },
+  {
+    "id":4,
+    "imgURL": "https://images.unsplash.com/photo-1553279768-865429fa0078?w=500",
+    "price": 80.00,
+    "name": "Mango",
+    "description": "Ripe tropical mangoes with a fragrant aroma and sweet golden flesh.",
+    "rating": 4.9
+  },
+  {
+    "id":5,
+    "imgURL": "https://images.unsplash.com/photo-1543168256-418811576931?w=500",
+    "price": 150.00,
+    "name": "Strawberry",
+    "description": "Bright red berries with a sweet and slightly tangy taste.",
+    "rating": 4.8
+  },
+  {
+    "id":6,
+    "imgURL": "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=500",
+    "price": 90.00,
+    "name": "Pineapple",
+    "description": "A tropical fruit with juicy yellow flesh and a sweet-tart flavor.",
+    "rating": 4.5
+  },
+  {
+    "id":7,
+    "imgURL": "https://images.unsplash.com/photo-1528825871115-3581a5387919?w=500",
+    "price": 110.00,
+    "name": "Grapes",
+    "description": "Bite-sized, juicy grapes that make a refreshing and convenient snack.",
+    "rating": 4.6
+  },
+  {
+    "id":8,
+    "imgURL": "https://images.unsplash.com/photo-1527325678964-54921661f888?w=500",
+    "price": 130.00,
+    "name": "Watermelon",
+    "description": "Refreshing watermelon with crisp red flesh and a high water content.",
+    "rating": 4.7
+  },
+  {
+    "id":9,
+    "imgURL": "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=500",
+    "price": 75.00,
+    "name": "Papaya",
+    "description": "Soft tropical papaya with orange flesh and a mild, sweet flavor.",
+    "rating": 4.4
+  },
+  {
+    "id":10,
+    "imgURL": "https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=500",
+    "price": 95.00,
+    "name": "Cherries",
+    "description": "Small, juicy red fruits with a sweet flavor, perfect for desserts and snacks.",
+    "rating": 4.6
+  }
+]
