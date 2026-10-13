@@ -1,0 +1,202 @@
+:root {
+  --auth-background: #f7f5f2;
+  --auth-card: #ffffff;
+  --auth-heading: #20201e;
+  --auth-text: #6e6b66;
+  --auth-border: #ddd9d2;
+  --auth-accent: #b85c38;
+  --auth-accent-dark: #97472a;
+  --auth-focus: rgba(184, 92, 56, 0.2);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--auth-background);
+}
+
+#root {
+  width: 100%;
+  max-width: none;
+  min-height: 100svh;
+  border: 0;
+}
+
+.auth-page {
+  display: grid;
+  min-height: 100svh;
+  padding: 32px 20px;
+  place-items: center;
+}
+
+.auth-card {
+  width: min(100%, 440px);
+  padding: 44px;
+  background: var(--auth-card);
+  border: 1px solid var(--auth-border);
+  border-radius: 16px;
+  box-shadow: 0 20px 45px rgba(53, 44, 34, 0.08);
+}
+
+.auth-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.brand {
+  display: inline-block;
+  margin-bottom: 28px;
+  color: var(--auth-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  text-decoration: none;
+}
+
+.auth-eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--auth-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.auth-header h1 {
+  margin: 0 0 10px;
+  color: var(--auth-heading);
+  font-size: clamp(1.7rem, 5vw, 2rem);
+  letter-spacing: -0.04em;
+}
+
+.auth-header p,
+.auth-switch {
+  color: var(--auth-text);
+  font-size: 0.9rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-form label {
+  color: var(--auth-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.auth-form input:not([type='checkbox']) {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 12px 14px;
+  color: var(--auth-heading);
+  background: #fff;
+  border: 1px solid var(--auth-border);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.auth-form input:not([type='checkbox'])::placeholder {
+  color: #aaa49c;
+}
+
+.auth-form input:not([type='checkbox']):focus {
+  border-color: var(--auth-accent);
+  box-shadow: 0 0 0 3px var(--auth-focus);
+}
+
+.label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.label-row a,
+.checkbox-label a,
+.auth-switch a {
+  color: var(--auth-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.label-row a:hover,
+.checkbox-label a:hover,
+.auth-switch a:hover {
+  color: var(--auth-accent-dark);
+  text-decoration: underline;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 2px 0 12px;
+  color: var(--auth-text) !important;
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+}
+
+.checkbox-label input {
+  accent-color: var(--auth-accent);
+}
+
+.auth-form button {
+  padding: 13px 16px;
+  color: #fff;
+  background: var(--auth-accent);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.auth-form button:hover {
+  background: var(--auth-accent-dark);
+}
+
+.auth-form button:active {
+  transform: translateY(1px);
+}
+
+.auth-form button:focus-visible,
+.brand:focus-visible,
+.auth-switch a:focus-visible,
+.label-row a:focus-visible,
+.checkbox-label a:focus-visible {
+  outline: 3px solid var(--auth-focus);
+  outline-offset: 3px;
+}
+
+.auth-switch {
+  margin: 28px 0 0;
+  text-align: center;
+}
+
+.auth-error {
+  margin: 0 0 8px;
+  color: #b42318;
+  font-size: 0.82rem;
+}
+
+.auth-success {
+  margin: 0 0 8px;
+  color: #067647;
+  font-size: 0.82rem;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 32px 24px;
+  }
+}
