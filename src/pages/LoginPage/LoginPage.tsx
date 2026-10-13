@@ -5,18 +5,23 @@ import '../../css/LoginPage/LoginPage.css'
 function LoginPage() {
   const { login } = useAuth()
   const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setError('')
+    setIsSubmitting(true)
     const formData = new FormData(event.currentTarget)
     const email = String(formData.get('email') ?? '')
     const password = String(formData.get('password') ?? '')
 
     try {
-      login(email, password)
+      await login(email, password)
       window.location.assign('/')
     } catch (authError) {
       setError(authError instanceof Error ? authError.message : 'Unable to log in.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -67,7 +72,9 @@ function LoginPage() {
             </p>
           )}
 
-          <button type="submit">Log in</button>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Logging in...' : 'Log in'}
+          </button>
         </form>
 
         <p className="auth-switch">

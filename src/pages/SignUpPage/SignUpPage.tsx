@@ -5,9 +5,13 @@ import '../../css/SignUpPage/SignUpPage.css'
 function SignUpPage() {
   const { signUp } = useAuth()
   const [error, setError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [confirmationMessage, setConfirmationMessage] = useState('')
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
+    setError('')
+    setConfirmationMessage('')
     const formData = new FormData(event.currentTarget)
     const name = String(formData.get('name') ?? '')
     const email = String(formData.get('email') ?? '')
@@ -19,13 +23,21 @@ function SignUpPage() {
       return
     }
 
+    setIsSubmitting(true)
     try {
-      signUp(name, email, password)
-      window.location.assign('/')
+      const { needsEmailConfirmation } = await signUp(name, email, password)
+
+      if (needsEmailConfirmation) {
+        setConfirmationMessage('Check your email to confirm your account before logging in.')
+      } else {
+        window.location.assign('/')
+      }
     } catch (authError) {
       setError(
         authError instanceof Error ? authError.message : 'Unable to create your account.',
       )
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -95,7 +107,15 @@ function SignUpPage() {
             </p>
           )}
 
-          <button type="submit">Create account</button>
+          {confirmationMessage && (
+            <p className="auth-success" role="status">
+              {confirmationMessage}
+            </p>
+          )}
+
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Creating account...' : 'Create account'}
+          </button>
         </form>
 
         <p className="auth-switch">

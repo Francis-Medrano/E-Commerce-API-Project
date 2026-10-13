@@ -1,62 +1,106 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
+import type { User } from '@supabase/supabase-js'
+import { supabase } from '../../lib/supabase'
 import { AuthContext, type AuthUser } from './authContext'
 
-type StoredAccount = AuthUser & {
-  password: string
+function toAuthUser(user: User): AuthUser {
+  return {
+    name: String(user.user_metadata.full_name ?? user.email?.split('@')[0] ?? 'Shoply user'),
+    email: user.email ?? '',
+  }
 }
 
-const accountsStorageKey = 'shoply-accounts'
-const userStorageKey = 'shoply-user'
-
-function readStoredAccounts(): StoredAccount[] {
-  const accounts = localStorage.getItem(accountsStorageKey)
-  return accounts ? (JSON.parse(accounts) as StoredAccount[]) : []
+function getAuthErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback
 }
 
 function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(() => {
-    const storedUser = localStorage.getItem(userStorageKey)
-    return storedUser ? (JSON.parse(storedUser) as AuthUser) : null
-  })
+  const [user, setUser] = useState<AuthUser | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const saveUser = (nextUser: AuthUser) => {
-    setUser(nextUser)
-    localStorage.setItem(userStorageKey, JSON.stringify(nextUser))
-  }
+  useEffect(() => {
+    let isMounted = true
 
-  const login = (email: string, password: string) => {
-    const account = readStoredAccounts().find(
-      (storedAccount) => storedAccount.email === email.trim().toLowerCase(),
-    )
+    const loadSession = async () => {
+      const { data, error } = await supabase.auth.getSession()
 
-    if (!account || account.password !== password) {
-      throw new Error('Invalid email or password.')
+      if (error) {
+        throw new Error(getAuthErrorMessage(error, 'Unable to load your session.'))
+      }
+
+      if (isMounted) {
+        setUser(data.session?.user ? toAuthUser(data.session.user) : null)
+        setIsLoading(false)
+      }
     }
 
-    saveUser({ name: account.name, email: account.email })
+    void loadSession().catch((error: unknown) => {
+      if (isMounted) {
+        setIsLoading(false)
+        console.error(error)
+      }
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (isMounted) {
+        setUser(session?.user ? toAuthUser(session.user) : null)
+        setIsLoading(false)
+      }
+    })
+
+    return () => {
+      isMounted = false
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  const login = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: email.trim().toLowerCase(),
+      password,
+    })
+
+    if (error) {
+      throw new Error(getAuthErrorMessage(error, 'Unable to log in.'))
+    }
   }
 
-  const signUp = (name: string, email: string, password: string) => {
-    const normalizedEmail = email.trim().toLowerCase()
-    const accounts = readStoredAccounts()
+  const signUp = async (name: string, email: string, password: string) => {
+    const { data, error } = await supabase.auth.signUp({
+      email: email.trim().toLowerCase(),
+      password,
+      options: {
+        data: { full_name: name.trim() },
+      },
+    })
 
-    if (accounts.some((account) => account.email === normalizedEmail)) {
-      throw new Error('An account with this email already exists.')
+    if (error) {
+      throw new Error(getAuthErrorMessage(error, 'Unable to create your account.'))
     }
 
-    const newAccount = { name: name.trim(), email: normalizedEmail, password }
-    localStorage.setItem(accountsStorageKey, JSON.stringify([...accounts, newAccount]))
-    saveUser({ name: newAccount.name, email: newAccount.email })
+    return { needsEmailConfirmation: data.session === null }
   }
 
-  const logout = () => {
-    setUser(null)
-    localStorage.removeItem(userStorageKey)
+  const logout = async () => {
+    const { error } = await supabase.auth.signOut()
+
+    if (error) {
+      throw new Error(getAuthErrorMessage(error, 'Unable to log out.'))
+    }
   }
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated: user !== null, login, signUp, logout }}
+      value={{
+        user,
+        isAuthenticated: user !== null,
+        isLoading,
+        login,
+        signUp,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -189,6 +189,12 @@ body {
   font-size: 0.82rem;
 }
 
+.auth-success {
+  margin: 0 0 8px;
+  color: #067647;
+  font-size: 0.82rem;
+}
+
 @media (max-width: 480px) {
   .auth-card {
     padding: 32px 24px;
