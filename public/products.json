@@ -33,7 +33,7 @@
   },
   {
     "id":5,
-    "imgURL": "https://images.unsplash.com/photo-1543168256-418811576931?w=500",
+    "imgURL": "https://i.pinimg.com/736x/2e/91/65/2e916588b555b08c9cdc9df2be175b4a.jpg?w=500",
     "price": 150.00,
     "name": "Strawberry",
     "description": "Bright red berries with a sweet and slightly tangy taste.",
@@ -41,7 +41,7 @@
   },
   {
     "id":6,
-    "imgURL": "https://images.unsplash.com/photo-1490474418585-ba9bad8fd0ea?w=500",
+    "imgURL": "https://i.pinimg.com/736x/c9/51/7f/c9517fd7dcb6eb7e6a83ac2ca5405a22.jpg?w=500",
     "price": 90.00,
     "name": "Pineapple",
     "description": "A tropical fruit with juicy yellow flesh and a sweet-tart flavor.",
@@ -49,7 +49,7 @@
   },
   {
     "id":7,
-    "imgURL": "https://images.unsplash.com/photo-1528825871115-3581a5387919?w=500",
+    "imgURL": "https://i.pinimg.com/736x/71/2e/71/712e7176ff45b12f619f6e489fe131b0.jpg?w=500",
     "price": 110.00,
     "name": "Grapes",
     "description": "Bite-sized, juicy grapes that make a refreshing and convenient snack.",
@@ -57,7 +57,7 @@
   },
   {
     "id":8,
-    "imgURL": "https://images.unsplash.com/photo-1527325678964-54921661f888?w=500",
+    "imgURL": "https://i.pinimg.com/1200x/f5/52/25/f5522551c5a750869e2453979df67264.jpg?w=500",
     "price": 130.00,
     "name": "Watermelon",
     "description": "Refreshing watermelon with crisp red flesh and a high water content.",
@@ -65,7 +65,7 @@
   },
   {
     "id":9,
-    "imgURL": "https://images.unsplash.com/photo-1601493700631-2b16ec4b4716?w=500",
+    "imgURL": "https://i.pinimg.com/736x/2c/5a/ee/2c5aeef79f3f42e021f988983d66f4bc.jpg?w=500",
     "price": 75.00,
     "name": "Papaya",
     "description": "Soft tropical papaya with orange flesh and a mild, sweet flavor.",

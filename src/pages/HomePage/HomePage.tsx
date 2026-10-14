@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import '../../css/HomePage/HomePage.css'
+import Header from '../../components/Header/Header'
 
 type Product = {
   id: number
@@ -56,17 +57,7 @@ function HomePage() {
 
   return (
     <main className="home-page">
-      <header className="home-header">
-        <a className="home-brand" href="/" aria-label="Shoply home">
-          Shoply
-        </a>
-        <nav aria-label="Main navigation">
-          <a href="/login">Log in</a>
-          <a className="home-signup" href="/signup">
-            Sign up
-          </a>
-        </nav>
-      </header>
+      <Header />
 
       <section className="home-intro" aria-labelledby="home-title">
         <p className="home-eyebrow">Fresh picks, delivered</p>

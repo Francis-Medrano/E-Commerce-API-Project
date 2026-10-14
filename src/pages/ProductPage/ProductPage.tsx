@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import '../../css/ProductPage/ProductPage.css'
+import Header from '../../components/Header/Header'
+import { supabase } from '../../lib/supabase'
 
 type Product = {
   id: number
@@ -32,6 +34,7 @@ function ProductPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [actionMessage, setActionMessage] = useState('')
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
   const productId = Number(window.location.pathname.split('/').pop())
 
   useEffect(() => {
@@ -66,9 +69,47 @@ function ProductPage() {
     void loadProduct()
   }, [productId])
 
-  const addToCart = () => {
-    if (product) {
+  const addToCart = async () => {
+    if (!product) return
+
+    setActionMessage('')
+    setIsAddingToCart(true)
+
+    try {
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+      if (userError || !userData.user) {
+        throw new Error('Please log in before adding items to your cart.')
+      }
+
+      const { data: existingItem, error: lookupError } = await supabase
+        .from('cart_items')
+        .select('quantity')
+        .eq('user_id', userData.user.id)
+        .eq('product_id', product.id)
+        .maybeSingle()
+
+      if (lookupError) {
+        throw new Error(lookupError.message)
+      }
+
+      const { error: cartError } = await supabase.from('cart_items').upsert(
+        {
+          user_id: userData.user.id,
+          product_id: product.id,
+          quantity: (existingItem?.quantity ?? 0) + 1,
+        },
+        { onConflict: 'user_id,product_id' },
+      )
+
+      if (cartError) {
+        throw new Error(cartError.message)
+      }
+
       setActionMessage(`${product.name} was added to your cart.`)
+    } catch (cartError) {
+      setActionMessage(cartError instanceof Error ? cartError.message : 'Unable to update your cart.')
+    } finally {
+      setIsAddingToCart(false)
     }
   }
 
@@ -80,17 +121,7 @@ function ProductPage() {
 
   return (
     <main className="product-page">
-      <header className="home-header">
-        <a className="home-brand" href="/" aria-label="Shoply home">
-          Shoply
-        </a>
-        <nav aria-label="Main navigation">
-          <a href="/login">Log in</a>
-          <a className="home-signup" href="/signup">
-            Sign up
-          </a>
-        </nav>
-      </header>
+      <Header />
 
       {isLoading && <p className="product-page-status">Loading product...</p>}
       {error && (
@@ -116,8 +147,8 @@ function ProductPage() {
             <p className="product-description">{product.description}</p>
 
             <div className="product-actions">
-              <button type="button" className="add-to-cart-button" onClick={addToCart}>
-                Add To Cart
+              <button type="button" className="add-to-cart-button" onClick={() => void addToCart()} disabled={isAddingToCart}>
+                {isAddingToCart ? 'Adding...' : 'Add To Cart'}
               </button>
               <button type="button" className="buy-now-button" onClick={buyNow}>
                 Buy Now
