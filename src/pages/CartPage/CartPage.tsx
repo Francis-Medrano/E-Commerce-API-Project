@@ -39,6 +39,10 @@ function CartPage() {
   const [error, setError] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [updatingProductId, setUpdatingProductId] = useState<number | null>(null)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
+  const [checkoutMessage, setCheckoutMessage] = useState('')
+  const [draftQuantities, setDraftQuantities] = useState<Record<number, string>>({})
 
   const loadCart = async () => {
     setError('')
@@ -102,6 +106,44 @@ function CartPage() {
     [cartLines],
   )
 
+  const checkout = async () => {
+    setIsCheckingOut(true)
+    setError('')
+    try {
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+      if (userError || !userData.user) throw new Error('Please log in to check out.')
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({ user_id: userData.user.id, total: subtotal, status: 'placed' })
+        .select('id')
+        .single()
+      if (orderError || !order) throw new Error(orderError?.message ?? 'Unable to create your order.')
+      const { error: itemsError } = await supabase.from('order_items').insert(
+        cartLines.map((line) => ({
+          order_id: order.id,
+          product_id: line.product_id,
+          product_name: line.product.name,
+          product_image: line.product.imgURL,
+          unit_price: line.product.price,
+          quantity: line.quantity,
+        })),
+      )
+      if (itemsError) {
+        await supabase.from('orders').delete().eq('id', order.id)
+        throw new Error(itemsError.message)
+      }
+      const { error: clearError } = await supabase.from('cart_items').delete().eq('user_id', userData.user.id)
+      if (clearError) throw new Error(clearError.message)
+      setIsCheckoutOpen(false)
+      setCheckoutMessage('Checkout complete. Your purchase is now in My Purchases.')
+      await loadCart()
+    } catch (checkoutError) {
+      setError(checkoutError instanceof Error ? checkoutError.message : 'Unable to complete checkout.')
+    } finally {
+      setIsCheckingOut(false)
+    }
+  }
+
   const updateQuantity = async (productId: number, quantity: number) => {
     setUpdatingProductId(productId)
     setError('')
@@ -111,7 +153,6 @@ function CartPage() {
       if (userError || !userData.user) {
         throw new Error('Please log in to manage your cart.')
       }
-
       if (quantity === 0) {
         const { error: deleteError } = await supabase
           .from('cart_items')
@@ -198,7 +239,29 @@ function CartPage() {
                       >
                         −
                       </button>
-                      <span>{line.quantity}</span>
+                      <input
+                        type="number"
+                        min="1"
+                        step="1"
+                        value={draftQuantities[line.product_id] ?? String(line.quantity)}
+                        disabled={updatingProductId === line.product_id}
+                        aria-label={`Quantity of ${line.product.name}`}
+                        onChange={(event) => {
+                          setDraftQuantities({ ...draftQuantities, [line.product_id]: event.target.value })
+                        }}
+                        onBlur={() => {
+                          const nextQuantity = Number(draftQuantities[line.product_id])
+                          if (Number.isInteger(nextQuantity) && nextQuantity > 0 && nextQuantity !== line.quantity) {
+                            void updateQuantity(line.product_id, nextQuantity)
+                          } else {
+                            setDraftQuantities((current) => {
+                              const remaining = { ...current }
+                              delete remaining[line.product_id]
+                              return remaining
+                            })
+                          }
+                        }}
+                      />
                       <button
                         type="button"
                         aria-label={`Increase ${line.product.name} quantity`}
@@ -232,10 +295,25 @@ function CartPage() {
                 <span>Delivery</span>
                 <span>Calculated at checkout</span>
               </div>
-              <button type="button" disabled>
-                Checkout coming soon
+              <button type="button" onClick={() => setIsCheckoutOpen(true)}>
+                Checkout
               </button>
             </aside>
+          </div>
+        )}
+        {checkoutMessage && <p className="cart-success" role="status">{checkoutMessage}</p>}
+        {isCheckoutOpen && (
+          <div className="checkout-modal-backdrop" role="presentation">
+            <section className="checkout-modal" role="dialog" aria-modal="true" aria-labelledby="checkout-title">
+              <h2 id="checkout-title">Confirm checkout</h2>
+              <p>Place this order for ${subtotal.toFixed(2)}?</p>
+              <div className="checkout-modal-actions">
+                <button type="button" onClick={() => setIsCheckoutOpen(false)} disabled={isCheckingOut}>Cancel</button>
+                <button type="button" onClick={() => void checkout()} disabled={isCheckingOut}>
+                  {isCheckingOut ? 'Processing...' : 'Confirm checkout'}
+                </button>
+              </div>
+            </section>
           </div>
         )}
       </section>

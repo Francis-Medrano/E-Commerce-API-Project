@@ -22,7 +22,7 @@ function CartIcon() {
 }
 
 function ShopHeader() {
-  const { isAuthenticated, isLoading, logout } = useAuth()
+  const { user, isAuthenticated, isLoading, logout } = useAuth()
   const [logoutError, setLogoutError] = useState('')
 
   const handleLogout = async () => {
@@ -47,11 +47,16 @@ function ShopHeader() {
           <>
             <div className="profile-menu">
               <button className="profile-trigger" type="button" aria-label="Open profile menu">
-                <ProfileIcon />
+                {user?.avatarUrl ? (
+                  <img src={user.avatarUrl} alt="" className="profile-avatar" />
+                ) : (
+                  <ProfileIcon />
+                )}
               </button>
+              <span className="profile-name">{user?.name}</span>
               <div className="profile-dropdown">
-                <a href="/profile">My Profile</a>
-                <a href="/purchases">My Purchase</a>
+                <a href="/account/profile">My Account</a>
+                <a href="/purchases">My Purchases</a>
                 <button type="button" onClick={handleLogout}>
                   Log out
                 </button>

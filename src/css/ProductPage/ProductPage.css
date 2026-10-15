@@ -144,6 +144,86 @@ body {
   margin-top: 32px;
 }
 
+.product-quantity input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.product-quantity input[type="number"]::-webkit-inner-spin-button,
+.product-quantity input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.product-quantity {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.product-quantity button {
+  width: 28px ; 
+  height: 28px;
+  min-width: 28px;
+  padding: 0;
+  border: 1px solid var(--product-border);
+  border-radius: 50%;
+  color: var(--product-heading);
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.product-quantity button:hover:not(:disabled) {
+  color: #fff;
+  background: var(--product-accent);
+  border-color: var(--product-accent);
+}
+
+.product-quantity button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+}
+
+.product-quantity input,
+.quantity-control input {
+  box-sizing: border-box;
+  width: 48px;
+  height: 38px;
+  padding: 7px 5px;
+  border: 1px solid var(--product-border);
+  border-radius: 6px;
+  color: var(--product-heading);
+  background: #fff;
+  font: inherit;
+  text-align: center;
+}
+
+.product-quantity > span {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.product-quantity input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.product-quantity input::-webkit-inner-spin-button,
+.product-quantity input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .product-actions button {
   padding: 13px 20px;
   border-radius: 8px;
@@ -187,6 +267,80 @@ body {
   font-weight: 600;
 }
 
+.product-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(32, 32, 30, .45);
+}
+
+.product-modal {
+  width: min(430px, 100%);
+  padding: 32px;
+  border: 1px solid var(--product-border);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(32, 32, 30, .18);
+}
+
+.product-modal-eyebrow {
+  color: var(--product-accent);
+  font-size: .72rem;
+  font-weight: 750;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.product-modal h2 {
+  margin: 8px 0 10px;
+  color: var(--product-heading);
+}
+
+.product-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.product-modal-actions button,
+.checkout-modal-actions button,
+.modal-actions button {
+  padding: 11px 18px;
+  border: 1px solid var(--product-border);
+  border-radius: 8px;
+  color: var(--product-heading);
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: .85rem;
+  font-weight: 700;
+}
+
+.product-modal-actions .modal-confirm-button,
+.checkout-modal-actions button:last-child,
+.modal-actions .account-button {
+  border-color: var(--product-accent);
+  color: #fff;
+  background: var(--product-accent);
+}
+
+.product-modal-actions button:hover:not(:disabled),
+.checkout-modal-actions button:hover:not(:disabled),
+.modal-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.product-modal-actions button:disabled,
+.checkout-modal-actions button:disabled,
+.modal-actions button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
 .product-page-status {
   padding: 72px 0;
 }
@@ -205,6 +359,9 @@ body {
 .home-brand:focus-visible,
 .home-header nav a:focus-visible,
 .product-actions button:focus-visible,
+.product-quantity button:focus-visible,
+.product-quantity input:focus-visible,
+.product-modal-actions button:focus-visible,
 .product-page-error a:focus-visible {
   outline: 3px solid rgba(184, 92, 56, 0.25);
   outline-offset: 4px;

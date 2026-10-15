@@ -5,8 +5,13 @@ import { AuthContext, type AuthUser } from './authContext'
 
 function toAuthUser(user: User): AuthUser {
   return {
+    id: user.id,
     name: String(user.user_metadata.full_name ?? user.email?.split('@')[0] ?? 'Shoply user'),
     email: user.email ?? '',
+    phone: String(user.user_metadata.phone ?? ''),
+    gender: String(user.user_metadata.gender ?? ''),
+    birthDate: String(user.user_metadata.birth_date ?? ''),
+    avatarUrl: String(user.user_metadata.avatar_url ?? ''),
   }
 }
 

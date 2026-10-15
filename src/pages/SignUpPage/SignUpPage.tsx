@@ -54,13 +54,13 @@ function SignUpPage() {
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
-          <label htmlFor="signup-name">Full name</label>
+          <label htmlFor="signup-name">Name</label>
           <input
             id="signup-name"
             name="name"
             type="text"
             autoComplete="name"
-            placeholder="Your full name"
+            placeholder="Your Name"
             required
           />
 

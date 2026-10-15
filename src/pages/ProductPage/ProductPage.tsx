@@ -35,6 +35,9 @@ function ProductPage() {
   const [error, setError] = useState('')
   const [actionMessage, setActionMessage] = useState('')
   const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [quantity, setQuantity] = useState(1)
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false)
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
   const productId = Number(window.location.pathname.split('/').pop())
 
   useEffect(() => {
@@ -96,7 +99,7 @@ function ProductPage() {
         {
           user_id: userData.user.id,
           product_id: product.id,
-          quantity: (existingItem?.quantity ?? 0) + 1,
+          quantity: (existingItem?.quantity ?? 0) + quantity,
         },
         { onConflict: 'user_id,product_id' },
       )
@@ -115,7 +118,53 @@ function ProductPage() {
 
   const buyNow = () => {
     if (product) {
-      setActionMessage(`You are ready to buy ${product.name}.`)
+      setActionMessage('')
+      setIsCheckoutOpen(true)
+    }
+  }
+
+  const checkout = async () => {
+    if (!product) return
+
+    setIsCheckingOut(true)
+    setActionMessage('')
+
+    try {
+      const { data: userData, error: userError } = await supabase.auth.getUser()
+      if (userError || !userData.user) {
+        throw new Error('Please log in to check out.')
+      }
+
+      const { data: order, error: orderError } = await supabase
+        .from('orders')
+        .insert({ user_id: userData.user.id, total: product.price * quantity, status: 'placed' })
+        .select('id')
+        .single()
+
+      if (orderError || !order) {
+        throw new Error(orderError?.message ?? 'Unable to create your order.')
+      }
+
+      const { error: itemError } = await supabase.from('order_items').insert({
+        order_id: order.id,
+        product_id: product.id,
+        product_name: product.name,
+        product_image: product.imgURL,
+        unit_price: product.price,
+        quantity,
+      })
+
+      if (itemError) {
+        await supabase.from('orders').delete().eq('id', order.id)
+        throw new Error(itemError.message)
+      }
+
+      setIsCheckoutOpen(false)
+      setActionMessage('Checkout complete. Your purchase is now in My Purchases.')
+    } catch (checkoutError) {
+      setActionMessage(checkoutError instanceof Error ? checkoutError.message : 'Unable to complete checkout.')
+    } finally {
+      setIsCheckingOut(false)
     }
   }
 
@@ -145,8 +194,34 @@ function ProductPage() {
             </div>
             <p className="product-detail-price">${product.price.toFixed(2)}</p>
             <p className="product-description">{product.description}</p>
-
+            
             <div className="product-actions">
+              <div className="product-quantity" aria-label={`Quantity of ${product.name}`}>
+                <span>Quantity</span>
+                <button
+                  type="button"
+                  aria-label={`Decrease ${product.name} quantity`}
+                  disabled={quantity <= 1}
+                  onClick={() => setQuantity((current) => Math.max(1, current - 1))}
+                >
+                  −
+                </button>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={quantity}
+                  onChange={(event) => setQuantity(Math.max(1, Number(event.target.value) || 1))}
+                  aria-label="Product quantity"
+                />
+                <button
+                  type="button"
+                  aria-label={`Increase ${product.name} quantity`}
+                  onClick={() => setQuantity((current) => current + 1)}
+                >
+                  +
+                </button>
+              </div>
               <button type="button" className="add-to-cart-button" onClick={() => void addToCart()} disabled={isAddingToCart}>
                 {isAddingToCart ? 'Adding...' : 'Add To Cart'}
               </button>
@@ -162,6 +237,23 @@ function ProductPage() {
             )}
           </div>
         </article>
+      )}
+      {isCheckoutOpen && product && (
+        <div className="product-modal-backdrop">
+          <section className="product-modal" role="dialog" aria-modal="true" aria-labelledby="product-checkout-title">
+            <p className="product-modal-eyebrow">Order confirmation</p>
+            <h2 id="product-checkout-title">Confirm checkout</h2>
+            <p>Place {quantity} {product.name} for ${(product.price * quantity).toFixed(2)}?</p>
+            <div className="product-modal-actions">
+              <button type="button" className="modal-cancel-button" onClick={() => setIsCheckoutOpen(false)} disabled={isCheckingOut}>
+                Cancel
+              </button>
+              <button type="button" className="modal-confirm-button" onClick={() => void checkout()} disabled={isCheckingOut}>
+                {isCheckingOut ? 'Processing...' : 'Confirm checkout'}
+              </button>
+            </div>
+          </section>
+        </div>
       )}
     </main>
   )
