@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../../context/AuthContext/useAuth'
-import '../../css/Header/Header.css'
+import '../../components/Header/Header.css'
 
 function ProfileIcon() {
   return (

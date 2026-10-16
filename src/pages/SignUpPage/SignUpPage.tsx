@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useAuth } from '../../context/AuthContext/useAuth'
-import '../../css/SignUpPage/SignUpPage.css'
+import '../../pages/SignUpPage/SignUpPage.css'
 
 function SignUpPage() {
   const { signUp } = useAuth()

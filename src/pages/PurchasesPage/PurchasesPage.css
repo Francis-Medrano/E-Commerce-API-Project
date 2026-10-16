@@ -1,0 +1,106 @@
+:root {
+  --account-background: #fbfaf7;
+  --account-heading: #20201e;
+  --account-text: #080500;
+  --account-border: #e7e2da;
+  --account-accent: #b85c38;
+}
+
+.account-page {
+  width: min(1180px, 100%);
+  min-height: 100svh;
+  margin: 0 auto;
+  padding: 0 32px 72px;
+  color: var(--account-text);
+  text-align: left;
+}
+
+.account-content {
+  padding: 56px 0;
+}
+
+.account-heading {
+  border-bottom: 1px solid var(--account-border);
+  padding-bottom: 24px;
+}
+
+.account-heading p {
+  color: var(--account-accent);
+  font-size: .75rem;
+  font-weight: 750;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.account-heading h1 {
+  margin: 8px 0 0;
+  color: var(--account-heading);
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  letter-spacing: -.07em;
+}
+
+.account-error {
+  margin: 18px 0;
+  color: #b42318;
+}
+
+.account-muted,
+.account-status {
+  padding: 28px 0;
+}
+
+.purchase-grid {
+  display: grid;
+  gap: 14px;
+}
+
+.purchase-card {
+  display: flex;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--account-border);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.purchase-card img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.purchase-card h2 {
+  margin: 0 0 5px;
+  font-size: 1.1rem;
+  color: #080500;
+}
+
+.purchase-card p {
+  font-size: .9rem;
+}
+
+.purchase-card strong,
+.purchase-card small {
+  display: block;
+  margin-top: 8px;
+}
+
+.purchase-card small {
+  color: var(--account-text);
+}
+
+@media (max-width: 620px) {
+  .account-page {
+    padding: 0 20px 48px;
+  }
+
+  .purchase-card {
+    align-items: flex-start;
+  }
+
+  .purchase-card img {
+    width: 76px;
+    height: 76px;
+  }
+}

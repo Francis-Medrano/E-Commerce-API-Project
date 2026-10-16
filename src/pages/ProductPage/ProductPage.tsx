@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import '../../css/ProductPage/ProductPage.css'
+import '../../pages/ProductPage/ProductPage.css'
 import Header from '../../components/Header/Header'
 import { supabase } from '../../lib/supabase'
 

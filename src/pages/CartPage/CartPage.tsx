@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../../lib/supabase'
-import '../../css/CartPage/CartPage.css'
+import '../../pages/CartPage/CartPage.css'
 import Header from '../../components/Header/Header'
 
 type Product = {

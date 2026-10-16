@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import '../../css/HomePage/HomePage.css'
+import '../../pages/HomePage/HomePage.css'
 import Header from '../../components/Header/Header'
 
 type Product = {

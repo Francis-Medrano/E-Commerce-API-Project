@@ -2,7 +2,7 @@ import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
 import Header from '../../components/Header/Header'
 import { useAuth } from '../../context/AuthContext/useAuth'
 import { supabase } from '../../lib/supabase'
-import '../../css/AccountPage/AccountPage.css'
+import '../../pages/AccountPage/AccountPage.css'
 
 type Address = {
   id: number
